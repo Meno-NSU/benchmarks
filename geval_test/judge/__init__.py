@@ -1,0 +1,46 @@
+from geval_test.settings import JudgeSettings
+from geval_test.models import TestCasesFileFull, TestOut, TestMetricsResults
+from deepeval.test_case import LLMTestCase
+from geval_test.judge.google import get_model as get_google_model
+from geval_test.judge.openai_api import get_model as get_api_model
+from geval_test.geval import GEvalStandardJudge
+import json
+import tqdm
+
+
+def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[TestOut]:
+
+    if settings.use_gemini:
+        model = get_google_model(settings)
+    else:
+        model = get_api_model(settings)
+    geval = GEvalStandardJudge(model)
+
+    results: list[TestOut] = []
+    for case in tqdm.tqdm(test_cases):
+        llm_test_case = LLMTestCase(
+            input=case["question"],
+            actual_output=case["model_answer"],
+            expected_output=case["ground_truth"],
+        )
+
+        results.append(
+            TestOut(
+                result=TestMetricsResults(**geval.eval(llm_test_case)),
+                question=case["question"],
+                model_answer=case["model_answer"],
+                ground_truth=case["ground_truth"],
+            )
+        )
+    return results
+
+
+def judge(settings: JudgeSettings):
+    with open(settings.file, "r") as f:
+        test_cases: TestCasesFileFull = json.load(f)
+    
+    results = judge_cases(settings, test_cases)
+
+    out_file = settings.file.with_stem(f"{settings.file.stem}_judged")
+    with open(out_file, "w") as f:
+        json.dump(results, f, indent=4, ensure_ascii=False)
