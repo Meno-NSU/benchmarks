@@ -46,10 +46,9 @@ ARGS_TO_ENV = {
 
 @dataclass
 class ProxySettings:
-    proxy: str | None = None
 
     def __post_init__(self):
-        if self.proxy:
+        if getattr(self, "proxy") is not None:
             os.environ["wss_proxy"] = self.proxy
             os.environ["ws_proxy"] = self.proxy
 
@@ -61,6 +60,7 @@ class JudgeSettings(ProxySettings):
     model: str
     api_key: str
     use_gemini: bool
+    proxy: str | None = None
 
 
 @dataclass
@@ -68,6 +68,7 @@ class InferenceSettings(ProxySettings):
     file: Path
     address: str
     model: str = "menon-1"
+    proxy: str | None = None
 
 
 def create_parser() -> ArgumentParser:
@@ -76,10 +77,9 @@ def create_parser() -> ArgumentParser:
         Arguments.environment_file.as_arg(), "-e", type=Path, help="Environment file"
     )
     parser.add_argument(
-        Arguments.inference.as_arg(),
-        "-i",
-        action="store_true",
-        help="Inference mode. Please choose address of the backend",
+        Arguments.file.as_arg(),
+        "-f",
+        help="File to judge or inference",
     )
     parser.add_argument(
         Arguments.inference.as_arg(),
@@ -128,7 +128,7 @@ def get_args():
 
 def get_settings(env_file: Path | None = None) -> JudgeSettings | InferenceSettings:
     args = get_args()
-    if args.environment_file:
+    if getattr(args, Arguments.environment_file) is not None:
         env_file = args.environment_file
     load_dotenv(dotenv_path=env_file)
     for arg, env in ARGS_TO_ENV.items():

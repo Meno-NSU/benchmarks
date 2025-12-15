@@ -5,13 +5,13 @@ import tqdm
 import requests
 
 
-def retrieve(address: str, text: str) -> str | None:
+def retrieve(address: str, model: str, text: str) -> str | None:
     messages = [
         {"role": "user", "content": text},
     ]
 
     payload = {
-        "model": "menon-1",
+        "model": model,
         "messages": messages,
         "stream": False,
         "user": "test",
@@ -29,7 +29,7 @@ def inference_cases(
     for jsoned_test in tqdm.tqdm(cases):
         if "model_answer" not in jsoned_test or jsoned_test["model_answer"] is None:
             jsoned_test["model_answer"] = retrieve(
-                settings.address, jsoned_test["question"]
+                settings.address, settings.model, jsoned_test["question"]
             )
     return cases
 
