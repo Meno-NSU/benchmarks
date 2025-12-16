@@ -75,5 +75,4 @@ class GeminiNetworkModel(DeepEvalBaseLLM):
 
 def get_model(settings: JudgeSettings) -> GeminiNetworkModel:
     client = get_client(settings.api_key, settings.proxy)
-    print(client.models.list().page)
     return GeminiNetworkModel(client, settings.model, settings.use_gemini_live)
