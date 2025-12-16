@@ -6,6 +6,7 @@ from geval_test.judge.openai_api import get_model as get_api_model
 from geval_test.geval import GEvalStandardJudge
 import json
 import tqdm
+import traceback
 
 
 def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[TestOut]:
@@ -17,21 +18,25 @@ def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[
     geval = GEvalStandardJudge(model)
 
     results: list[TestOut] = []
-    for case in tqdm.tqdm(test_cases):
-        llm_test_case = LLMTestCase(
-            input=case["question"],
-            actual_output=case["model_answer"],
-            expected_output=case["ground_truth"],
-        )
-
-        results.append(
-            TestOut(
-                result=TestMetricsResults(**geval.eval(llm_test_case)),
-                question=case["question"],
-                model_answer=case["model_answer"],
-                ground_truth=case["ground_truth"],
+    try:
+        for case in tqdm.tqdm(test_cases):
+            llm_test_case = LLMTestCase(
+                input=case["question"],
+                actual_output=case["model_answer"],
+                expected_output=case["ground_truth"],
             )
-        )
+
+            results.append(
+                TestOut(
+                    result=TestMetricsResults(**geval.eval(llm_test_case)),
+                    question=case["question"],
+                    model_answer=case["model_answer"],
+                    ground_truth=case["ground_truth"],
+                )
+            )
+    except Exception as e:
+        print(e)
+        print(traceback.print_exc())
     return results
 
 

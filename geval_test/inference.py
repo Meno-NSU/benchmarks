@@ -26,20 +26,30 @@ def retrieve(address: str, model: str, text: str) -> str | None:
 def inference_cases(
     settings: InferenceSettings, cases: TestCasesFile
 ) -> TestCasesFileFull:
-    for jsoned_test in tqdm.tqdm(cases):
-        if "model_answer" not in jsoned_test or jsoned_test["model_answer"] is None:
-            jsoned_test["model_answer"] = retrieve(
-                settings.address, settings.model, jsoned_test["question"]
-            )
-    return cases
+    results: TestCasesFileFull = []
+    try:
+        for jsoned_test in tqdm.tqdm(cases):
+            if "model_answer" not in jsoned_test or jsoned_test["model_answer"] is None:
+                results.append(
+                    TestCaseFromFileFull(
+                        question=jsoned_test["question"],
+                        ground_truth=jsoned_test["ground_truth"],
+                        model_answer=retrieve(
+                            settings.address, settings.model, jsoned_test["question"]
+                        ),
+                    )
+                )
+    except Exception as e:
+        print(e)
+    return results
 
 
 def inference(settings: InferenceSettings):
     with open(settings.file, "r") as f:
         jsoned_tests: TestCasesFile = json.load(f)
 
-    jsoned_tests = inference_cases(settings, jsoned_tests)
+    result = inference_cases(settings, jsoned_tests)
 
     out_file = settings.file.with_stem(f"{settings.file.stem}_out")
     with open(out_file, "w") as f:
-        json.dump(jsoned_tests, f, indent=4, ensure_ascii=False)
+        json.dump(result, f, indent=4, ensure_ascii=False)
