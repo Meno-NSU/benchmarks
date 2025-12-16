@@ -1,5 +1,5 @@
-from geval_test.settings import InferenceSettings
-from geval_test.models import TestCasesFile, TestCasesFileFull, TestCaseFromFileFull
+from meno_bench.settings import InferenceSettings
+from meno_bench.models import TestCasesFile, TestCasesFileFull, TestCaseFromFileFull
 import json
 import tqdm
 import requests

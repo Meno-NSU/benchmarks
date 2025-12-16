@@ -1,7 +1,7 @@
 from deepeval.models import DeepEvalBaseLLM
 from openai import OpenAI, AsyncOpenAI
-from geval_test.judge.proxy import get_http_client, get_async_http_client
-from geval_test.settings import JudgeSettings
+from meno_bench.judge.proxy import get_http_client, get_async_http_client
+from meno_bench.settings import JudgeSettings
 
 
 class OpenAIAPINetworkModel(DeepEvalBaseLLM):

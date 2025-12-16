@@ -1,10 +1,10 @@
 from google import genai
 from google.genai.errors import ServerError
-from geval_test.settings import JudgeSettings
+from meno_bench.settings import JudgeSettings
 import asyncio
 import httpx
 from deepeval.models import DeepEvalBaseLLM
-from geval_test.judge.proxy import get_http_client, get_async_http_client
+from meno_bench.judge.proxy import get_http_client, get_async_http_client
 import time
 
 

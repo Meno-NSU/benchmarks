@@ -1,5 +1,5 @@
 [project]
-name = "geval-test"
+name = "meno-bench"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -16,3 +16,6 @@ dependencies = [
     "tqdm>=4.67.1",
     "zstd>=1.5.7.2",
 ]
+
+[project.scripts]
+meno-bench = "meno_bench:main.main"

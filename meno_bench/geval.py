@@ -1,7 +1,7 @@
 from deepeval.metrics import GEval
 from deepeval.test_case import LLMTestCaseParams, LLMTestCase
 from deepeval.models import DeepEvalBaseLLM
-from geval_test.models import TestResult
+from meno_bench.models import TestResult
 
 
 class GEvalJudgeBase:

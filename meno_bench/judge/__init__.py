@@ -1,9 +1,9 @@
-from geval_test.settings import JudgeSettings
-from geval_test.models import TestCasesFileFull, TestOut, TestMetricsResults
+from meno_bench.settings import JudgeSettings
+from meno_bench.models import TestCasesFileFull, TestOut, TestMetricsResults
 from deepeval.test_case import LLMTestCase
-from geval_test.judge.google import get_model as get_google_model
-from geval_test.judge.openai_api import get_model as get_api_model
-from geval_test.geval import GEvalStandardJudge
+from meno_bench.judge.google import get_model as get_google_model
+from meno_bench.judge.openai_api import get_model as get_api_model
+from meno_bench.geval import GEvalStandardJudge
 import json
 import tqdm
 import traceback
