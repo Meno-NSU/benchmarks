@@ -3,6 +3,7 @@ from meno_bench.models import TestCasesFileFull, TestOut, TestMetricsResults
 from deepeval.test_case import LLMTestCase
 from meno_bench.judge.google import get_model as get_google_model
 from meno_bench.judge.openai_api import get_model as get_api_model
+from meno_bench.judge.summary import get_summary
 from meno_bench.geval import GEvalStandardJudge
 import json
 import tqdm
@@ -49,3 +50,10 @@ def judge(settings: JudgeSettings):
     out_file = settings.file.with_stem(f"{settings.file.stem}_judged")
     with open(out_file, "w") as f:
         json.dump(results, f, indent=4, ensure_ascii=False)
+    
+    summary = get_summary(results)
+    sum_file = settings.file.with_stem(f"{settings.file.stem}_summary")
+    with open(sum_file, "w") as f:
+        json.dump(summary, f, indent=4, ensure_ascii=False)
+
+    print(summary)

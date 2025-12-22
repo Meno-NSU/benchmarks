@@ -1,4 +1,4 @@
-from geval_test.main import main
+from meno_bench.main import main
 
 
 if __name__ == "__main__":
