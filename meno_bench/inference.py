@@ -3,9 +3,12 @@ from meno_bench.models import TestCasesFile, TestCasesFileFull, TestCaseFromFile
 import json
 import tqdm
 import requests
+from time import time
 
 
-def retrieve(address: str, model: str, text: str) -> str | None:
+def retrieve(
+    address: str, model: str, text: str
+) -> tuple[str, float] | tuple[None, None]:
     messages = [
         {"role": "user", "content": text},
     ]
@@ -17,10 +20,12 @@ def retrieve(address: str, model: str, text: str) -> str | None:
         "user": "test",
     }
 
+    time_s = time()
     response = requests.post(address, json=payload)
+    time_s = time() - time_s
     if response.status_code != 200:
-        return None
-    return response.json()["choices"][0]["message"]["content"]
+        return None, None
+    return response.json()["choices"][0]["message"]["content"], time_s
 
 
 def inference_cases(
@@ -30,13 +35,17 @@ def inference_cases(
     try:
         for jsoned_test in tqdm.tqdm(cases):
             if "model_answer" not in jsoned_test or jsoned_test["model_answer"] is None:
+                model_answer, time_s = retrieve(
+                    settings.address, settings.model, jsoned_test["question"]
+                )
+                if model_answer is None:
+                    raise Exception("Could not retrieve model answer")
                 results.append(
                     TestCaseFromFileFull(
                         question=jsoned_test["question"],
                         ground_truth=jsoned_test["ground_truth"],
-                        model_answer=retrieve(
-                            settings.address, settings.model, jsoned_test["question"]
-                        ),
+                        model_answer=model_answer,
+                        time_s=time_s,
                     )
                 )
     except Exception as e:

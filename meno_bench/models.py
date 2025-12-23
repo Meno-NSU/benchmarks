@@ -10,6 +10,7 @@ class TestCaseFromFileFull(TypedDict):
     question: str
     ground_truth: str
     model_answer: str
+    time_s: float
 
 
 type TestCasesFile = list[TestCaseFromFile]
@@ -29,10 +30,7 @@ class TestMetricsResults(TypedDict):
 
 class TestOut(TypedDict):
     result: TestMetricsResults
-    question: str
-    model_answer: str
-    ground_truth: str | None
-
+    case: TestCaseFromFileFull
 
 class Out(TypedDict):
     summary: dict

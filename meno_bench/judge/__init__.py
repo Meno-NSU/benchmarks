@@ -33,9 +33,7 @@ def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[
             results.append(
                 TestOut(
                     result=TestMetricsResults(**geval.eval(llm_test_case)),
-                    question=case["question"],
-                    model_answer=case["model_answer"],
-                    ground_truth=case["ground_truth"],
+                    case=case,
                 )
             )
     except Exception as e:
