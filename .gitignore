@@ -8,7 +8,8 @@ wheels/
 
 # Virtual environments
 .venv
-.env
+*.env
 test*
 *.json
 *.b64
+!*.example.env
