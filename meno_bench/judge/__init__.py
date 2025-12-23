@@ -2,6 +2,7 @@ from meno_bench.settings import JudgeSettings
 from meno_bench.models import TestCasesFileFull, TestOut, TestMetricsResults
 from deepeval.test_case import LLMTestCase
 from meno_bench.judge.google import get_model as get_google_model
+from meno_bench.judge.gig import get_model as get_giga_model
 from meno_bench.judge.openai_api import get_model as get_api_model
 from meno_bench.judge.summary import get_summary
 from meno_bench.geval import GEvalStandardJudge
@@ -14,6 +15,8 @@ def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[
 
     if settings.use_gemini:
         model = get_google_model(settings)
+    elif settings.use_gigachat:
+        model = get_giga_model(settings)
     else:
         model = get_api_model(settings)
     geval = GEvalStandardJudge(model)

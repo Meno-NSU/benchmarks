@@ -14,6 +14,7 @@ class Arguments(StrEnum):
     model = "model"
     api_key = "api_key"
     use_gemini = "use_gemini"
+    use_gigachat = "use_gigachat"
     use_gemini_live = "use_gemini_live"
     proxy = "proxy"
 
@@ -31,6 +32,7 @@ class Environment(StrEnum):
     model = "MODEL"
     api_key = "API_KEY"
     use_gemini = "USE_GEMINI"
+    use_gigachat = "USE_GIGACHAT" 
     use_gemini_live = "USE_GEMINI_LIVE"
     proxy = "PROXY"
 
@@ -42,6 +44,7 @@ ARGS_TO_ENV = {
     Arguments.model: Environment.model,
     Arguments.api_key: Environment.api_key,
     Arguments.use_gemini: Environment.use_gemini,
+    Arguments.use_gigachat: Environment.use_gigachat,
     Arguments.use_gemini_live: Environment.use_gemini_live,
     Arguments.proxy: Environment.proxy,
 }
@@ -67,6 +70,7 @@ class JudgeSettings(ProxySettings):
     model: str
     api_key: str
     use_gemini: bool
+    use_gigachat: bool
     use_gemini_live: bool
     proxy: str | None = None
 
@@ -128,6 +132,12 @@ def create_parser() -> ArgumentParser:
         "-g",
         action="store_true",
         help="Use gemini judge model. Api key required",
+    )
+    parser.add_argument(
+        Arguments.use_gigachat.as_arg(),
+        "-t",
+        action="store_true",
+        help="Use gigachat model.",
     )
     parser.add_argument(
         Arguments.use_gemini_live.as_arg(),
