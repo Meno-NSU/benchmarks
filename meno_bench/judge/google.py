@@ -1,6 +1,6 @@
 from google import genai
 from google.genai.errors import ServerError
-from meno_bench.settings import JudgeSettings
+from meno_bench.settings import GoogleJudgeSettings
 import asyncio
 import httpx
 from deepeval.models import DeepEvalBaseLLM
@@ -73,6 +73,6 @@ class GeminiNetworkModel(DeepEvalBaseLLM):
         return self.model_name
 
 
-def get_model(settings: JudgeSettings) -> GeminiNetworkModel:
+def get_model(settings: GoogleJudgeSettings) -> GeminiNetworkModel:
     client = get_client(settings.api_key, settings.proxy)
     return GeminiNetworkModel(client, settings.model, settings.use_gemini_live)

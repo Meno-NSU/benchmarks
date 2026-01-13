@@ -9,9 +9,11 @@ uv tool install https://github.com/Meno-NSU/benchmarks.git
 
 # Usage
 
-This tool can work with command line arguments or corresponding environment variables. Also any env file can be supplied by `-e` flag.
+This tool can work with command line arguments or corresponding environment variables.
 
-This tool provides 2 modes: Inference and Judge.
+Tool uses Typer for simple command line interface.
+
+This tool provides 2 modes: Inference and Judge with 2 API.
 
 ## Inference
 
@@ -41,7 +43,7 @@ INFERENCE=1
 or command line variant:
 
 ```bash
-meno-bench -i -f correct_json.json -a http://10.1.15.44:9006/v1/chat/completions -m menon-1
+meno-bench inference correct_json.json http://10.1.15.44:9006/v1/chat/completions menon-1
 ```
 
 The address is backend endpoint for inference. It must accept messages in format:
@@ -63,7 +65,7 @@ The address is backend endpoint for inference. It must accept messages in format
 
 ## Judge
 
-There are two options to use judge: via google API or via openai API interface.
+There are two options to use judge: via google API or via OpenAI standard API interface.
 
 ### OpenAI API interface
 
@@ -78,7 +80,7 @@ API_KEY=""
 or command line variant:
 
 ```bash
-meno-bench -f correct_json_out.json -a http://192.168.3.213:9111/v1 -m meno-tiny-0.1 -k ""
+meno-bench openai correct_json_out.json http://192.168.3.213:9111/v1 meno-tiny-0.1
 ```
 
 It must accept file from inference stage.
@@ -100,10 +102,10 @@ API_KEY=""
 or command line variant:
 
 ```bash
-meno-bench -f correct_json_out.json -p socks5://127.0.0.1:9150 -m gemini-2.5-flash -g -k ""
+meno-bench correct_json_out.json "API_KEY" "gemini-2.5-flash" --peoxy "socks5://127.0.0.1:9150" --no-use-gemini-live
 ```
 
-If you want to force use live mode, set `USE_GEMINI_LIVE=1` or add `-u` argument. Since google swapping live models and often removes pure live text-to-text models, it is not recommended to use it. Also if model name contain `live` keyword it will be treated as live model.
+If you want to force use live mode, set `USE_GEMINI_LIVE=1` or add `--use-gemini-live` argument. Since google swapping live models and often removes pure live text-to-text models, it is not recommended to use it. Also if model name contain `live` keyword it will be treated as live model.
 
 #### The output will be written to file `[INPUT FILE NAME]_judged.json`
 

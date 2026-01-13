@@ -1,5 +1,5 @@
 from gigachat import GigaChat
-from meno_bench.settings import JudgeSettings
+from meno_bench.settings import GigaSettings
 from deepeval.models import DeepEvalBaseLLM
 
 
@@ -32,5 +32,5 @@ class GigaNetworkModel(DeepEvalBaseLLM):
         return self.model_name
 
 
-def get_model(settings: JudgeSettings) -> GigaNetworkModel:
+def get_model(settings: GigaSettings) -> GigaNetworkModel:
     return GigaNetworkModel(settings.api_key, settings.model)

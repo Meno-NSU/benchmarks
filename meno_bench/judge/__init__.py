@@ -1,24 +1,29 @@
-from meno_bench.settings import JudgeSettings
+from meno_bench.settings import JudgeSettings, GoogleJudgeSettings, OpenAIJudgeSettings, GigaSettings
 from meno_bench.models import TestCasesFileFull, TestOut, TestMetricsResults
-from deepeval.test_case import LLMTestCase
-from meno_bench.judge.google import get_model as get_google_model
-from meno_bench.judge.gig import get_model as get_giga_model
-from meno_bench.judge.openai_api import get_model as get_api_model
 from meno_bench.judge.summary import get_summary
-from meno_bench.geval import GEvalStandardJudge
 import json
 import tqdm
 import traceback
 
 
 def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[TestOut]:
-
-    if settings.use_gemini:
-        model = get_google_model(settings)
-    elif settings.use_gigachat:
-        model = get_giga_model(settings)
-    else:
-        model = get_api_model(settings)
+    match settings:
+        case GoogleJudgeSettings():
+            # import here for better performance
+            from meno_bench.judge.google import get_model as get_google_model
+            model = get_google_model(settings)
+        case OpenAIJudgeSettings():
+            # import here for better performance
+            from meno_bench.judge.openai_api import get_model as get_api_model
+            model = get_api_model(settings)
+        case GigaSettings():
+            from meno_bench.judge.gig import get_model as get_api_model
+            model = get_api_model(settings)
+        case _:
+            raise Exception("Unknown judge settings")
+    # import here for better performance in inference as cli tool
+    from meno_bench.geval import GEvalStandardJudge
+    from deepeval.test_case import LLMTestCase
     geval = GEvalStandardJudge(model)
 
     results: list[TestOut] = []
@@ -42,7 +47,7 @@ def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[
     return results
 
 
-def judge(settings: JudgeSettings):
+def judge(settings: OpenAIJudgeSettings | GoogleJudgeSettings):
     with open(settings.file, "r") as f:
         test_cases: TestCasesFileFull = json.load(f)
     

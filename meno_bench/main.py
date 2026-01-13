@@ -4,11 +4,13 @@ from meno_bench.judge import judge
 
 
 def main():
+    # settings = get_settings("inference.example.env")
     settings = get_settings()
-    if isinstance(settings, InferenceSettings):
-        inference(settings)
-    else:
-        judge(settings)
+    if settings:
+        if isinstance(settings, InferenceSettings):
+            inference(settings)
+        else:
+            judge(settings)
 
 
 if __name__ == "__main__":
