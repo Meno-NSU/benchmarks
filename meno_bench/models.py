@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Any
 
 
 class TestCaseFromFile(TypedDict):
@@ -26,6 +26,7 @@ class TestResult(TypedDict):
 class TestMetricsResults(TypedDict):
     correctness: TestResult
     clarity: TestResult
+    rouge: dict[Any, Any]
 
 
 class TestOut(TypedDict):
