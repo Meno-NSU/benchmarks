@@ -60,6 +60,9 @@ class InferenceSettings:
     _name = "inference"
     _help = "Inference settings"
 
+    def __post_init__(self):
+        self.file = Path(self.file)
+
 
 @add_to_typer
 @dataclass
@@ -79,7 +82,7 @@ class SummarySettings:
             arg="--out-file",
             short_arg="-o",
             env_var="OUT_FILE",
-        )
+        ),
     )
     _name = "summary"
     _help = "Summarize file"
@@ -220,7 +223,11 @@ class GigaSettings:
 
 
 type AnySettings = (
-    InferenceSettings | SummarySettings | GoogleJudgeSettings | OpenAIJudgeSettings | GigaSettings
+    InferenceSettings
+    | SummarySettings
+    | GoogleJudgeSettings
+    | OpenAIJudgeSettings
+    | GigaSettings
 )
 type JudgeSettings = GoogleJudgeSettings | OpenAIJudgeSettings | GigaSettings
 

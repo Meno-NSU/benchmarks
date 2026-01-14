@@ -4,6 +4,7 @@ import json
 import tqdm
 import requests
 from time import time
+from pathlib import Path
 
 
 def retrieve(
