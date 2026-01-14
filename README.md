@@ -37,7 +37,7 @@ Example of env file for inference is `inference.example.env`:
 FILE="correct_json.json"
 ADDRESS="http://10.1.15.44:9006/v1/chat/completions"
 MODEL="menon-1"
-INFERENCE=1
+NAME=INFERENCE
 ```
 
 or command line variant:
@@ -75,6 +75,7 @@ FILE="correct_json_out.json"
 ADDRESS="http://192.168.3.213:9111/v1"
 MODEL="meno-tiny-0.1"
 API_KEY=""
+NAME="OPENAI"
 ```
 
 or command line variant:
@@ -93,7 +94,7 @@ This is mode to judge via google gemini API. Required config is `judge_google_pr
 FILE="correct_json_out.json"
 PROXY="socks5://127.0.0.1:9150"
 MODEL="gemini-2.5-flash"
-INFERENCE=0
+NAME=GOOGLE
 USE_GEMINI=1
 USE_GEMINI_LIVE=0
 API_KEY=""
