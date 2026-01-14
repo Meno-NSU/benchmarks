@@ -33,7 +33,14 @@ def add_function_to_typer(name: str, help: str | None = None):
 @add_to_typer
 @dataclass
 class InferenceSettings:
-    file: Path
+    file: Path = field(
+        metadata=ArgumentMedata(
+            help="File with test cases",
+            arg="--file",
+            short_arg="-f",
+            env_var="FILE",
+        )
+    )
     address: str = field(
         metadata=ArgumentMedata(
             help="Address of the model",
@@ -52,6 +59,30 @@ class InferenceSettings:
     )
     _name = "inference"
     _help = "Inference settings"
+
+
+@add_to_typer
+@dataclass
+class SummarySettings:
+    file: Path = field(
+        metadata=ArgumentMedata(
+            help="File with test cases",
+            arg="--file",
+            short_arg="-f",
+            env_var="FILE",
+        )
+    )
+    out_file: Path | None = field(
+        default=None,
+        metadata=ArgumentMedata(
+            help="File to output. Defaults to '<file_input>_summary.json'",
+            arg="--out-file",
+            short_arg="-o",
+            env_var="OUT_FILE",
+        )
+    )
+    _name = "summary"
+    _help = "Summarize file"
 
 
 @add_to_typer
@@ -189,7 +220,7 @@ class GigaSettings:
 
 
 type AnySettings = (
-    InferenceSettings | GoogleJudgeSettings | OpenAIJudgeSettings | GigaSettings
+    InferenceSettings | SummarySettings | GoogleJudgeSettings | OpenAIJudgeSettings | GigaSettings
 )
 type JudgeSettings = GoogleJudgeSettings | OpenAIJudgeSettings | GigaSettings
 
