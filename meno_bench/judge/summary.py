@@ -34,7 +34,7 @@ def get_summary(results: list[TestOut]) -> Summary:
                 for i in range(len(s["rouge"][k])):
                     s["rouge"][k][i] += v[i]
             else:
-                s["rouge"][k] = v
+                s["rouge"][k] = list(v)
     le = len(results)
     s["length"] /= le
     s["correctness"] /= le
