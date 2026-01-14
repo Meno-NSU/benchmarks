@@ -1,7 +1,13 @@
-from meno_bench.settings import get_settings, InferenceSettings, SummarySettings
+from meno_bench.settings import (
+    get_settings,
+    InferenceSettings,
+    SummarySettings,
+    PlotSettings,
+)
 from meno_bench.inference import inference
 from meno_bench.judge.summary import summarize_to_file
 from meno_bench.judge import judge
+from meno_bench.plotting import plot_sums
 
 
 def main():
@@ -12,6 +18,14 @@ def main():
             inference(settings)
         elif isinstance(settings, SummarySettings):
             summarize_to_file(settings.file, settings.out_file)
+        elif isinstance(settings, PlotSettings):
+            plot_sums(
+                settings.scan_dir,
+                settings.out_path,
+                settings.show,
+                settings.html,
+                settings.image,
+            )
         else:
             judge(settings)
 

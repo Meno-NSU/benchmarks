@@ -1,9 +1,7 @@
-from argparse import ArgumentParser, _SubParsersAction, Action
 from dotenv import load_dotenv
 import os
 from dataclasses import dataclass, fields, field
 from pathlib import Path
-from enum import StrEnum
 from typing import TypedDict, get_args
 import typer
 
@@ -62,6 +60,61 @@ class InferenceSettings:
 
     def __post_init__(self):
         self.file = Path(self.file)
+
+
+@add_to_typer
+@dataclass
+class PlotSettings:
+    scan_dir: Path = field(
+        metadata=ArgumentMedata(
+            help="Dir to scan for summaries",
+            arg="--scan",
+            short_arg="-s",
+            env_var="SCAN_DIR",
+        )
+    )
+    out_path: Path = field(
+        default=Path("summary"),
+        metadata=ArgumentMedata(
+            help="Path to output",
+            arg="--out",
+            short_arg="-o",
+            env_var="OUT_PATH",
+        )
+    )
+    show: bool = field(
+        default=True,
+        metadata=ArgumentMedata(
+            help="Show plot",
+            arg="--show",
+            short_arg="-p",
+            env_var="SHOW",
+        )
+    )
+    html: bool = field(
+        default=False,
+        metadata=ArgumentMedata(
+            help="Save plot as HTML",
+            arg="--html",
+            short_arg="-H",
+            env_var="HTML",
+        )
+    )
+    image: bool = field(
+        default=False,
+        metadata=ArgumentMedata(
+            help="Save plot as image",
+            arg="--image",
+            short_arg="-I",
+            env_var="IMAGE",
+        )
+    )
+    _name = "plot"
+    _help = "Plot multiple summaries"
+
+    def __post_init__(self):
+        self.scan_dir = Path(self.scan_dir)
+        self.out_path = Path(self.out_path)
 
 
 @add_to_typer
@@ -225,6 +278,7 @@ class GigaSettings:
 type AnySettings = (
     InferenceSettings
     | SummarySettings
+    | PlotSettings
     | GoogleJudgeSettings
     | OpenAIJudgeSettings
     | GigaSettings
