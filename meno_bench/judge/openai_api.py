@@ -10,7 +10,7 @@ class OpenAIAPINetworkModel(DeepEvalBaseLLM):
         http_client = get_http_client(proxy)
         self.client = OpenAI(api_key=api_key, base_url=base_url, http_client=http_client)
         http_async_client = get_async_http_client(proxy)
-        self.async_client = AsyncOpenAI(api_key=None, base_url=base_url, http_client=http_async_client)
+        self.async_client = AsyncOpenAI(api_key=api_key, base_url=base_url, http_client=http_async_client)
 
     def load_model(self):
         return self
