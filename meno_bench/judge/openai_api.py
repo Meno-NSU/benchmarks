@@ -5,10 +5,10 @@ from meno_bench.settings import OpenAIJudgeSettings
 
 
 class OpenAIAPINetworkModel(DeepEvalBaseLLM):
-    def __init__(self, base_url: str, model_name: str, proxy: str | None = None):
+    def __init__(self, base_url: str, model_name: str, api_key: str, proxy: str | None = None):
         self.model_name = model_name
         http_client = get_http_client(proxy)
-        self.client = OpenAI(api_key=None, base_url=base_url, http_client=http_client)
+        self.client = OpenAI(api_key=api_key, base_url=base_url, http_client=http_client)
         http_async_client = get_async_http_client(proxy)
         self.async_client = AsyncOpenAI(api_key=None, base_url=base_url, http_client=http_async_client)
 
@@ -39,4 +39,4 @@ class OpenAIAPINetworkModel(DeepEvalBaseLLM):
 
 
 def get_model(settings: OpenAIJudgeSettings) -> OpenAIAPINetworkModel:
-    return OpenAIAPINetworkModel(settings.address, settings.model, settings.proxy)
+    return OpenAIAPINetworkModel(settings.address, settings.model, settings.api_key, settings.proxy)
