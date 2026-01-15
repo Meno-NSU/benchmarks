@@ -9,6 +9,8 @@ class Summary(TypedDict):
     length: float = 0.0
     correctness: float = 0.0
     clarity: float = 0.0
+    correctness2: float = 0.0
+    clarity2: float = 0.0
     time_per_request: float = 0.0
     rouge: dict
 
@@ -18,6 +20,8 @@ def get_summary(results: list[TestOut]) -> Summary:
         length=0,
         correctness=0.0,
         clarity=0.0,
+        correctness2=0.0,
+        clarity2=0.0,
         time_per_request=0,
         rouge=defaultdict(list),
     )
@@ -25,6 +29,8 @@ def get_summary(results: list[TestOut]) -> Summary:
         s["length"] += len(result["case"]["model_answer"])
         s["correctness"] += result["result"]["correctness"]["score"]
         s["clarity"] += result["result"]["clarity"]["score"]
+        s["correctness2"] += result["result"]["correctness2"]["score"]
+        s["clarity2"] += result["result"]["clarity2"]["score"]
         if "time_s" in result["case"]:
             s["time_per_request"] += result["case"]["time_s"]
         k: str
@@ -39,6 +45,8 @@ def get_summary(results: list[TestOut]) -> Summary:
     s["length"] /= le
     s["correctness"] /= le
     s["clarity"] /= le
+    s["correctness2"] /= le
+    s["clarity2"] /= le
     s["time_per_request"] /= le
     for k, v in s["rouge"].items():
         for i in range(len(v)):

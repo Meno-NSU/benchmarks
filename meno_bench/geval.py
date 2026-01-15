@@ -38,6 +38,33 @@ class GEvalStandardJudge:
             evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
             model=model,
         )
+        self.correctness2 = GEval(
+            name="Correctness2.0",
+            evaluation_steps=[
+                "Сверьте факты в 'actual output' с 'expected output'. Любое прямое противоречие — повод для минимального балла.",
+                "Оцените полноту ответа: если в 'actual output' отсутствуют ключевые детали, упомянутые в эталоне, существенно снизьте оценку.",
+                "Проверьте на наличие 'галлюцинаций': добавление фактов, которых нет в эталоне и которые невозможно логически вывести из контекста.",
+                "Допускаются различия в стиле изложения или личных оценках, если они не искажают фактическую суть эталонного ответа.",
+                "Игнорируйте незначительные грамматические ошибки, если они не меняют смысл фактов."
+            ],
+            evaluation_params=[
+                LLMTestCaseParams.ACTUAL_OUTPUT,
+                LLMTestCaseParams.EXPECTED_OUTPUT,
+            ],
+            model=model,
+        )
+        self.clarity2 = GEval(
+            name="Clarity2.0",
+            evaluation_steps=[
+                "Оцените, насколько текст написан живым и понятным языком. Избегает ли автор избыточного канцелярита и тяжелых словесных конструкций?",
+                "Проверьте использование терминологии: если используются узкоспециализированные термины, дано ли им краткое пояснение?",
+                "Оцените логическую последовательность: вытекает ли каждое следующее предложение из предыдущего? Нет ли резких скачков мысли?",
+                "Выявите двусмысленности: могут ли фразы быть истолкованы двояко из-за неудачного порядка слов или грамматики?",
+                "Текст должен быть лаконичным: удаление лишних слов ('водности') без потери смысла повышает оценку."
+            ],
+            evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
+            model=model,
+        )
 
     def eval(self, case: LLMTestCase) -> dict[str, TestResult]:
         self.correctness.measure(case)
@@ -47,4 +74,8 @@ class GEvalStandardJudge:
                 score=self.correctness.score, reason=self.correctness.reason
             ),
             "clarity": TestResult(score=self.clarity.score, reason=self.clarity.reason),
+            "correctness2": TestResult(
+                score=self.correctness2.score, reason=self.correctness2.reason
+            ),
+            "clarity2": TestResult(score=self.clarity2.score, reason=self.clarity2.reason),
         }

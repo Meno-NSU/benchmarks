@@ -26,6 +26,8 @@ class TestResult(TypedDict):
 class TestMetricsResults(TypedDict):
     correctness: TestResult
     clarity: TestResult
+    correctness2: TestResult
+    clarity2: TestResult
     rouge: dict[Any, Any]
 
 
