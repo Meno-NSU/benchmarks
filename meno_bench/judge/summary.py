@@ -22,7 +22,7 @@ def get_summary(results: list[TestOut]) -> Summary:
         clarity=0.0,
         correctness2=0.0,
         clarity2=0.0,
-        time_per_request=0,
+        rpm=0,
         rouge=defaultdict(list),
     )
     for result in results:
@@ -32,7 +32,7 @@ def get_summary(results: list[TestOut]) -> Summary:
         s["correctness2"] += result["result"]["correctness2"]["score"]
         s["clarity2"] += result["result"]["clarity2"]["score"]
         if "time_s" in result["case"]:
-            s["time_per_request"] += result["case"]["time_s"]
+            s["rpm"] += result["case"]["time_s"]
         k: str
         v: list[float]
         for k, v in result["result"]["rouge"].items():
@@ -47,7 +47,8 @@ def get_summary(results: list[TestOut]) -> Summary:
     s["clarity"] /= le
     s["correctness2"] /= le
     s["clarity2"] /= le
-    s["time_per_request"] /= le
+    s["rpm"] /= le
+    s["rpm"] = 60 / s["rpm"]
     for k, v in s["rouge"].items():
         for i in range(len(v)):
             s["rouge"][k][i] /= le
