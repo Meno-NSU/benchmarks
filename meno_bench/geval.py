@@ -69,6 +69,8 @@ class GEvalStandardJudge:
     def eval(self, case: LLMTestCase) -> dict[str, TestResult]:
         self.correctness.measure(case)
         self.clarity.measure(case)
+        self.correctness2.measure(case)
+        self.clarity2.measure(case)
         return {
             "correctness": TestResult(
                 score=self.correctness.score, reason=self.correctness.reason
