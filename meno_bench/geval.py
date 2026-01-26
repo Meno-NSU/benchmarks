@@ -39,7 +39,7 @@ class GEvalStandardJudge:
             model=model,
         )
         self.correctness2 = GEval(
-            name="Correctness2.0",
+            name="Correctness2",
             evaluation_steps=[
                 "Сверьте факты в 'actual output' с 'expected output'. Любое прямое противоречие — повод для минимального балла.",
                 "Оцените полноту ответа: если в 'actual output' отсутствуют ключевые детали, упомянутые в эталоне, существенно снизьте оценку.",
@@ -54,7 +54,7 @@ class GEvalStandardJudge:
             model=model,
         )
         self.clarity2 = GEval(
-            name="Clarity2.0",
+            name="Clarity2",
             evaluation_steps=[
                 "Оцените, насколько текст написан живым и понятным языком. Избегает ли автор избыточного канцелярита и тяжелых словесных конструкций?",
                 "Проверьте использование терминологии: если используются узкоспециализированные термины, дано ли им краткое пояснение?",

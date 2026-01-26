@@ -29,8 +29,8 @@ def get_summary(results: list[TestOut]) -> Summary:
         s["length"] += len(result["case"]["model_answer"])
         s["correctness"] += result["result"]["correctness"]["score"]
         s["clarity"] += result["result"]["clarity"]["score"]
-        s["correctness2"] += result["result"]["correctness2"]["score"]
-        s["clarity2"] += result["result"]["clarity2"]["score"]
+        s["correctness2"] += (result["result"]["correctness2"]["score"] or 0)
+        s["clarity2"] += (result["result"]["clarity2"]["score"] or 0)
         if "time_s" in result["case"]:
             s["rpm"] += result["case"]["time_s"]
         k: str
