@@ -26,8 +26,13 @@ def make_report(
                             data_inner[f"{k}.{k2}"].append(v2)
     wb = openpyxl.Workbook(write_only=True)
     sh = wb.create_sheet("Report")
+    sh = wb.active
     assert sh is not None
-    for parent, v in data.items():
-        sh.append(dict(model=parent, **v))
+    if data:
+        columns = ["model", *data[next(iter(data))].keys()]
+        sh.append(columns)
+        for parent, v in data.items():
+            for row in zip(*v.values()):
+                sh.append([parent, *row])
     wb.save(out_file.with_suffix(".xlsx"))
     wb.close()
