@@ -10,7 +10,7 @@ def make_report(
     out_file: Path = Path("summary"),
 ):
     scan_dir = Path(scan_dir).absolute()
-    data = defaultdict(defaultdict(list))
+    data = defaultdict(lambda: defaultdict(list))
     for parent in scan_dir.iterdir():
         for path in parent.glob("*_judged.json"):
             name = parent.name
@@ -29,5 +29,5 @@ def make_report(
     assert sh is not None
     for parent, v in data.items():
         sh.append(dict(model=parent, **v))
-    wb.save(out_file)
+    wb.save(out_file.with_suffix(".xlsx"))
     wb.close()
