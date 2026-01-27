@@ -31,13 +31,13 @@ def make_report(
     if data:
         columns = ["model", *data[next(iter(data))].keys()]
         sh.append(columns)
-        current_row = 2
+        # current_row = 2
         for parent, v in data.items():
-            written_row_count = 0
+            # written_row_count = 0
             for row in zip(*v.values()):
                 sh.append([parent, *row])
-                written_row_count += 1
-            sh.merge_cells(f"A{current_row}:A{current_row + written_row_count - 1}")
-            current_row += written_row_count
+                # written_row_count += 1
+            # sh.merge_cells(f"A{current_row}:A{current_row + written_row_count - 1}")
+            # current_row += written_row_count
     wb.save(out_file.with_suffix(".xlsx"))
     wb.close()
