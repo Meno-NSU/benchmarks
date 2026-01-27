@@ -25,7 +25,7 @@ def make_report(
                         for k2, v2 in v.items():
                             data_inner[f"{k}.{k2}"].append(v2)
     wb = openpyxl.Workbook(write_only=True)
-    sh = wb.active
+    sh = wb.create_sheet("Report")
     assert sh is not None
     for parent, v in data.items():
         sh.append(dict(model=parent, **v))
