@@ -3,11 +3,13 @@ from meno_bench.settings import (
     InferenceSettings,
     SummarySettings,
     PlotSettings,
+    MakeXLSettings
 )
 from meno_bench.inference import inference
 from meno_bench.judge.summary import summarize_to_file
 from meno_bench.judge import judge
 from meno_bench.plotting import plot_sums
+from meno_bench.xl import make_report
 
 
 def main():
@@ -25,6 +27,11 @@ def main():
                 settings.show,
                 settings.html,
                 settings.image,
+            )
+        elif isinstance(settings, MakeXLSettings):
+            make_report(
+                settings.scan_dir,
+                settings.out_path,
             )
         else:
             judge(settings)

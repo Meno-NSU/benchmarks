@@ -275,10 +275,39 @@ class GigaSettings:
     _help = "GigaChat judge"
 
 
+@add_to_typer
+@dataclass
+class MakeXLSettings:
+    scan_dir: Path = field(
+        metadata=ArgumentMedata(
+            help="Dir to scan for summaries",
+            arg="--scan",
+            short_arg="-s",
+            env_var="SCAN_DIR",
+        )
+    )
+    out_path: Path = field(
+        default=Path("summary"),
+        metadata=ArgumentMedata(
+            help="Path to output",
+            arg="--out",
+            short_arg="-o",
+            env_var="OUT_PATH",
+        )
+    )
+    _name = "xl"
+    _help = "Make xl report"
+
+    def __post_init__(self):
+        self.scan_dir = Path(self.scan_dir)
+        self.out_path = Path(self.out_path)
+
+
 type AnySettings = (
     InferenceSettings
     | SummarySettings
     | PlotSettings
+    | MakeXLSettings
     | GoogleJudgeSettings
     | OpenAIJudgeSettings
     | GigaSettings
