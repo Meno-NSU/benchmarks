@@ -24,6 +24,7 @@ def add_to_typer(f):
 def add_function_to_typer(name: str, help: str | None = None):
     def adder_function_decorator(f):
         app.command(name, help=help)(f)
+        return f
 
     return adder_function_decorator
 
@@ -323,17 +324,17 @@ def get_settings_from_env_file(
 ) -> AnySettings:
     load_dotenv(dotenv_path=env_file)
     assert "NAME" in os.environ, "NAME is not set in .env file"
-    assert file is not None or "FILE" in os.environ, (
-        "FILE is not set in .env file and not passed as arg"
-    )
+    # assert file is not None or "FILE" in os.environ, (
+    #     "FILE is not set in .env file and not passed as arg"
+    # )
     for cls in get_args(AnySettings.__value__):
         if os.environ["NAME"].lower() == cls._name.lower():
             kwargs = {}
             if file is not None:
                 kwargs["file"] = file
             for field in fields(cls):
-                if field.name not in kwargs:
-                    kwargs[field.name] = os.environ.get(field.metadata["env_var"])
+                if field.name not in kwargs and field.metadata["env_var"] in os.environ:
+                    kwargs[field.name] = os.environ[field.metadata["env_var"]]
             return cls(**kwargs)
 
 

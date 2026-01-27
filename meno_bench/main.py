@@ -13,7 +13,7 @@ from meno_bench.xl import make_report
 
 
 def main():
-    # settings = get_settings("inference.example.env")
+    # settings = get_settings("report.env")
     settings = get_settings()
     if settings:
         if isinstance(settings, InferenceSettings):
