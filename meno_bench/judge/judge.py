@@ -25,7 +25,7 @@ def judge_cases(settings: JudgeSettings, test_cases: TestCasesFileFull) -> list[
     # import here for better performance in inference as cli tool
     from meno_bench.geval import GEvalStandardJudge
     from deepeval.test_case import LLMTestCase
-    geval = GEvalStandardJudge(model)
+    geval = GEvalStandardJudge(model, strict=settings.strict)
 
     results: list[TestOut] = []
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rougeL', 'rougeLsum'], use_stemmer=True)

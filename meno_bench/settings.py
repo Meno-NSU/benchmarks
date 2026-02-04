@@ -178,6 +178,15 @@ class GoogleJudgeSettings:
             env_var="USE_GEMINI_LIVE",
         ),
     )
+    strict: bool = field(
+        default=False,
+        metadata=ArgumentMedata(
+            help="Use strict mode - binary metric score",
+            arg="--strict",
+            short_arg="-s",
+            env_var="USE_STRICT",
+        ),
+    )
     proxy: str | None = field(
         default=None,
         metadata=ArgumentMedata(
@@ -232,6 +241,15 @@ class OpenAIJudgeSettings:
             env_var="OPENAI_API_KEY",
         ),
     )
+    strict: bool = field(
+        default=False,
+        metadata=ArgumentMedata(
+            help="Use strict mode - binary metric score",
+            arg="--strict",
+            short_arg="-s",
+            env_var="USE_STRICT",
+        ),
+    )
     proxy: str | None = field(
         default=None,
         metadata=ArgumentMedata(
@@ -271,6 +289,15 @@ class GigaSettings:
             short_arg="-m",
             env_var="MODEL",
         )
+    )
+    strict: bool = field(
+        default=False,
+        metadata=ArgumentMedata(
+            help="Use strict mode - binary metric score",
+            arg="--strict",
+            short_arg="-s",
+            env_var="USE_STRICT",
+        ),
     )
     _name = "giga"
     _help = "GigaChat judge"

@@ -13,7 +13,7 @@ class GEvalJudgeBase:
 
 
 class GEvalStandardJudge:
-    def __init__(self, model: DeepEvalBaseLLM | str):
+    def __init__(self, model: DeepEvalBaseLLM | str, strict: bool = False):
         self.correctness = GEval(
             name="Correctness",
             evaluation_steps=[
@@ -26,6 +26,7 @@ class GEvalStandardJudge:
                 LLMTestCaseParams.EXPECTED_OUTPUT,
             ],
             model=model,
+            strict_mode=strict,
         )
         self.clarity = GEval(
             name="Clarity",
@@ -37,6 +38,7 @@ class GEvalStandardJudge:
             ],
             evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
             model=model,
+            strict_mode=strict,
         )
         self.correctness2 = GEval(
             name="Correctness2",
@@ -52,6 +54,7 @@ class GEvalStandardJudge:
                 LLMTestCaseParams.EXPECTED_OUTPUT,
             ],
             model=model,
+            strict_mode=strict,
         )
         self.clarity2 = GEval(
             name="Clarity2",
@@ -64,6 +67,7 @@ class GEvalStandardJudge:
             ],
             evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
             model=model,
+            strict_mode=strict,
         )
 
     def eval(self, case: LLMTestCase) -> dict[str, TestResult]:
