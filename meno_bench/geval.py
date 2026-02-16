@@ -42,22 +42,20 @@ class GEvalStandardJudge:
             strict_mode=strict,
         )
         self.correctness2 = GEval(
-            name="Correctness",
-            criteria=(
-                "Evaluate the factual accuracy and completeness of the actual output compared to the expected output. "
-                "Pay close attention to whether the information is missing, perfectly aligned, or overly verbose."
-            ),
-            evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT, LLMTestCaseParams.EXPECTED_OUTPUT],
-            rubric=[
-                Rubric(score_range=(0, 1), expected_outcome="Malformed answer: Output is gibberish, contains technical errors, or is unreadable."),
-                Rubric(score_range=(2, 2), expected_outcome="Entirely wrong answer: Output contradicts the truth or provides completely unrelated information."),
-                Rubric(score_range=(3, 4), expected_outcome="Answer without general information: Output misses the core premise and fails to provide the primary answer."),
-                Rubric(score_range=(5, 6), expected_outcome="Answer without some details: Core answer is present but significant supporting facts or steps are missing."),
-                Rubric(score_range=(7, 7), expected_outcome="Answer without little details: Almost complete, but misses minor nuances, specific numbers, or secondary names."),
-                Rubric(score_range=(8, 8), expected_outcome="Correct answer with too many details: Factually perfect but excessively wordy or includes irrelevant fluff that distracts from the answer."),
-                Rubric(score_range=(9, 9), expected_outcome="Fully correct answer: Perfectly matches the expected output in facts and scope."),
-                Rubric(score_range=(10, 10), expected_outcome="Correct answer with additional details: Factually perfect and includes helpful, relevant context beyond the expected output."),
-            ]
+            name="Correctness2",
+            evaluation_steps=[
+                "Сверьте факты в 'actual output' с 'expected output'. Любое прямое противоречие — повод для минимального балла.",
+                "Оцените полноту ответа: если в 'actual output' отсутствуют ключевые детали, упомянутые в эталоне, существенно снизьте оценку.",
+                "Проверьте на наличие 'галлюцинаций': добавление фактов, которых нет в эталоне и которые невозможно логически вывести из контекста.",
+                "Допускаются различия в стиле изложения или личных оценках, если они не искажают фактическую суть эталонного ответа.",
+                "Игнорируйте незначительные грамматические ошибки, если они не меняют смысл фактов.",
+            ],
+            evaluation_params=[
+                LLMTestCaseParams.ACTUAL_OUTPUT,
+                LLMTestCaseParams.EXPECTED_OUTPUT,
+            ],
+            model=model,
+            strict_mode=strict,
         )
         self.clarity2 = GEval(
             name="Clarity2",
@@ -66,25 +64,75 @@ class GEvalStandardJudge:
                 "Проверьте использование терминологии: если используются узкоспециализированные термины, дано ли им краткое пояснение?",
                 "Оцените логическую последовательность: вытекает ли каждое следующее предложение из предыдущего? Нет ли резких скачков мысли?",
                 "Выявите двусмысленности: могут ли фразы быть истолкованы двояко из-за неудачного порядка слов или грамматики?",
-                "Текст должен быть лаконичным: удаление лишних слов ('водности') без потери смысла повышает оценку."
+                "Текст должен быть лаконичным: удаление лишних слов ('водности') без потери смысла повышает оценку.",
             ],
             evaluation_params=[LLMTestCaseParams.ACTUAL_OUTPUT],
             model=model,
             strict_mode=strict,
         )
+        self.correctness_rubrics = GEval(
+            name="Correctness",
+            criteria=(
+                "Evaluate the factual accuracy and completeness of the actual output compared to the expected output. "
+                "Pay close attention to whether the information is missing, perfectly aligned, or overly verbose."
+            ),
+            evaluation_params=[
+                LLMTestCaseParams.ACTUAL_OUTPUT,
+                LLMTestCaseParams.EXPECTED_OUTPUT,
+            ],
+            rubric=[
+                Rubric(
+                    score_range=(0, 1),
+                    expected_outcome="Malformed answer: Output is gibberish, contains technical errors, or is unreadable.",
+                ),
+                Rubric(
+                    score_range=(2, 2),
+                    expected_outcome="Entirely wrong answer: Output contradicts the truth or provides completely unrelated information.",
+                ),
+                Rubric(
+                    score_range=(3, 4),
+                    expected_outcome="Answer without general information: Output misses the core premise and fails to provide the primary answer.",
+                ),
+                Rubric(
+                    score_range=(5, 6),
+                    expected_outcome="Answer without some details: Core answer is present but significant supporting facts or steps are missing.",
+                ),
+                Rubric(
+                    score_range=(7, 7),
+                    expected_outcome="Answer without little details: Almost complete, but misses minor nuances, specific numbers, or secondary names.",
+                ),
+                Rubric(
+                    score_range=(8, 8),
+                    expected_outcome="Correct answer with too many details: Factually perfect but excessively wordy or includes irrelevant fluff that distracts from the answer.",
+                ),
+                Rubric(
+                    score_range=(9, 9),
+                    expected_outcome="Fully correct answer: Perfectly matches the expected output in facts and scope.",
+                ),
+                Rubric(
+                    score_range=(10, 10),
+                    expected_outcome="Correct answer with additional details: Factually perfect and includes helpful, relevant context beyond the expected output.",
+                ),
+            ],
+        )
 
     def eval(self, case: LLMTestCase) -> dict[str, TestResult]:
         self.correctness.measure(case)
+        self.correctness_rubrics.measure(case)
         self.clarity.measure(case)
-        self.correctness2.measure(case)
-        self.clarity2.measure(case)
+        # self.correctness2.measure(case)
+        # self.clarity2.measure(case)
         return {
             "correctness": TestResult(
                 score=self.correctness.score, reason=self.correctness.reason
             ),
             "clarity": TestResult(score=self.clarity.score, reason=self.clarity.reason),
-            "correctness2": TestResult(
-                score=self.correctness2.score, reason=self.correctness2.reason
+            "correctness_rubrics": TestResult(
+                score=self.correctness_rubrics.score,
+                reason=self.correctness_rubrics.reason,
             ),
-            "clarity2": TestResult(score=self.clarity2.score, reason=self.clarity2.reason),
+            # "correctness2": TestResult(
+            #     score=self.correctness2.score, reason=self.correctness2.reason
+            # ),
+            # "clarity2": TestResult(score=self.clarity2.score, reason=self.clarity2.reason),
         }
