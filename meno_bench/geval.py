@@ -114,6 +114,7 @@ class GEvalStandardJudge:
                     expected_outcome="Correct answer with additional details: Factually perfect and includes helpful, relevant context beyond the expected output.",
                 ),
             ],
+            model=model,
         )
 
     def eval(self, case: LLMTestCase) -> dict[str, TestResult]:
