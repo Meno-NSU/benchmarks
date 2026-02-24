@@ -91,7 +91,7 @@ class GEvalStandardJudge:
                 ),
                 Rubric(
                     score_range=(3, 4),
-                    expected_outcome="Answer without general information: Output misses the core premise and fails to provide the primary answer.",
+                    expected_outcome="Answer without general information: Output misses or omits the core facts and/or fails to provide the primary answer.",
                 ),
                 Rubric(
                     score_range=(5, 6),
