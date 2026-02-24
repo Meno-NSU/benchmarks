@@ -21,6 +21,8 @@ class OpenAIAPINetworkModel(DeepEvalBaseLLM):
                 model=self.model_name,
                 prompt=prompt,
                 max_tokens=1000,
+                temperature=0.1,
+                top_p=0.95,
             )
             .choices[0]
             .text
@@ -31,6 +33,8 @@ class OpenAIAPINetworkModel(DeepEvalBaseLLM):
             model=self.model_name,
             prompt=prompt,
             max_tokens=1000,
+            temperature=0.1,
+            top_p=0.95,
         )
         return resp.choices[0].text
 
