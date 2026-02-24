@@ -101,12 +101,12 @@ class GEvalStandardJudge:
                     score_range=(7, 7),
                     expected_outcome="Answer without little details: Almost complete, but misses minor nuances, specific numbers, or secondary names.",
                 ),
+                # Rubric(
+                #     score_range=(8, 8),
+                #     expected_outcome="Correct answer with too many details: Factually perfect but excessively wordy or includes irrelevant fluff that distracts from the answer.",
+                # ),
                 Rubric(
-                    score_range=(8, 8),
-                    expected_outcome="Correct answer with too many details: Factually perfect but excessively wordy or includes irrelevant fluff that distracts from the answer.",
-                ),
-                Rubric(
-                    score_range=(9, 9),
+                    score_range=(8, 9),
                     expected_outcome="Fully correct answer: Perfectly matches the expected output in facts and scope.",
                 ),
                 Rubric(
