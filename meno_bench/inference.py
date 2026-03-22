@@ -5,6 +5,7 @@ import tqdm
 import requests
 from time import time
 from pathlib import Path
+from typing import Callable
 
 
 def retrieve(
@@ -30,15 +31,13 @@ def retrieve(
 
 
 def inference_cases(
-    settings: InferenceSettings, cases: TestCasesFile
+    interence_f: Callable[[str], str], cases: TestCasesFile
 ) -> TestCasesFileFull:
     results: TestCasesFileFull = []
     try:
         for jsoned_test in tqdm.tqdm(cases):
             if "model_answer" not in jsoned_test or jsoned_test["model_answer"] is None:
-                model_answer, time_s = retrieve(
-                    settings.address, settings.model, jsoned_test["question"]
-                )
+                model_answer, time_s = interence_f(jsoned_test["question"])
                 if model_answer is None:
                     raise Exception("Could not retrieve model answer")
                 results.append(
@@ -58,7 +57,9 @@ def inference(settings: InferenceSettings):
     with open(settings.file, "r") as f:
         jsoned_tests: TestCasesFile = json.load(f)
 
-    result = inference_cases(settings, jsoned_tests)
+    result = inference_cases(
+        lambda text: retrieve(settings.address, settings.model, text), jsoned_tests
+    )
 
     out_file = settings.file.with_stem(f"{settings.file.stem}_out")
     with open(out_file, "w") as f:
