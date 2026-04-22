@@ -65,6 +65,22 @@ The address is backend endpoint for inference. It must accept messages in format
 
 ## Judge
 
+No need to run inference first. Just json file required with format:
+[
+  {
+    "question": "...",
+    "ground_truth": "...",
+    "model_answer": "..."
+  },
+  {
+    "question": "...",
+    "ground_truth": "...",
+    "model_answer": "..."
+  },
+  "..."
+]
+```
+
 There are two options to use judge: via google API or via OpenAI standard API interface.
 
 ### OpenAI API interface
@@ -103,7 +119,7 @@ API_KEY=""
 or command line variant:
 
 ```bash
-meno-bench correct_json_out.json "API_KEY" "gemini-2.5-flash" --peoxy "socks5://127.0.0.1:9150" --no-use-gemini-live
+meno-bench correct_json_out.json "API_KEY" "gemini-2.5-flash" --proxy "socks5://127.0.0.1:9150" --no-use-gemini-live
 ```
 
 If you want to force use live mode, set `USE_GEMINI_LIVE=1` or add `--use-gemini-live` argument. Since google swapping live models and often removes pure live text-to-text models, it is not recommended to use it. Also if model name contain `live` keyword it will be treated as live model.
