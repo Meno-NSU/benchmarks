@@ -23,12 +23,8 @@ class TestResult(TypedDict):
     reason: str | None
 
 
-class TestMetricsResults(TypedDict):
-    correctness: TestResult
-    clarity: TestResult
-    correctness2: TestResult
-    clarity2: TestResult
-    rouge: dict[Any, Any]
+class TestMetricsResults(dict[str, TestResult | float]):
+    pass
 
 
 class TestOut(TypedDict):
